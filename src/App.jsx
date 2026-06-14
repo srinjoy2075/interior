@@ -9,6 +9,7 @@ import Testimonials from './components/Testimonials';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import ConsultationModal from './components/ConsultationModal';
+import Collections from './components/Collections';
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,6 +31,7 @@ function App() {
         <WhyChooseUs />
         <Services onOpenModal={() => setIsModalOpen(true)} />
         <Process />
+        <Collections onOpenModal={() => setIsModalOpen(true)} />
         <Testimonials />
         <Contact onOpenModal={() => setIsModalOpen(true)} />
       </main>
