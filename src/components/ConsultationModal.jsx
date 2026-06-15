@@ -66,12 +66,31 @@ const ConsultationModal = ({ onClose }) => {
   const handleSubmit = async () => {
     if (validateStep()) {
       setIsSubmitting(true);
-      // Simulate API call
-      setTimeout(() => {
+      setErrors({});
+
+      try {
+        const response = await fetch('http://localhost:5000/api/consultation', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          setRefNumber(data.refNumber);
+          setIsSuccess(true);
+        } else {
+          setErrors({ submit: data.message || 'Failed to submit consultation request. Please try again.' });
+        }
+      } catch (err) {
+        console.error('Error submitting consultation request:', err);
+        setErrors({ submit: 'Could not connect to the backend server. Please make sure the backend is running.' });
+      } finally {
         setIsSubmitting(false);
-        setRefNumber(`INT-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`);
-        setIsSuccess(true);
-      }, 1500);
+      }
     }
   };
 
@@ -303,6 +322,12 @@ const ConsultationModal = ({ onClose }) => {
                 </motion.div>
               </AnimatePresence>
             </div>
+
+            {errors.submit && (
+              <div style={{ color: '#ef4444', fontSize: '0.9rem', textAlign: 'center', padding: '0 3rem 1.5rem', fontFamily: 'var(--font-sans)' }}>
+                {errors.submit}
+              </div>
+            )}
 
             <div style={{ padding: '2rem 3rem', borderTop: '1px solid var(--color-gray-800)', display: 'flex', justifyContent: 'space-between' }}>
               {step > 1 ? (
